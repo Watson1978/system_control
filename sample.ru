@@ -43,7 +43,7 @@ end
 
 class SystemControl
   def initialize
-    Bonjour::publish(SERVER_NAME, SERVER_PORT)
+    Bonjour.publish(SERVER_NAME, SERVER_PORT)
     @volume = System::Sound.volume
   end
 
