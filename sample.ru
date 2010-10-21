@@ -3,6 +3,9 @@ framework 'Foundation'
 require 'rack'
 require 'system_control'
 
+SERVER_NAME = ""
+SERVER_PORT = 3000
+
 HTML =<<END
 <html>
 <head>
@@ -30,8 +33,17 @@ App:
 </html>
 END
 
+module Bonjour
+  module_function
+  def publish(name = SERVER_NAME, port = SERVER_PORT)
+    netservice = NSNetService.alloc.initWithDomain("", type:"_http._tcp", name:name, port:port)
+    netservice.publish()
+  end
+end
+
 class SystemControl
   def initialize
+    Bonjour::publish(SERVER_NAME, SERVER_PORT)
     @volume = System::Sound.volume
   end
 
