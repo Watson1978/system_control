@@ -160,5 +160,6 @@ void Init_system_control(void)
 
     VALUE mSound =  rb_define_module_under(mSystem, "Sound");
     rb_objc_define_module_function(mSound, "volume",     rb_sys_volume, 0);
+    rb_objc_define_module_function(mSound, "volume=",    rb_sys_set_volume, 1);
     rb_objc_define_module_function(mSound, "set_volume", rb_sys_set_volume, 1);
 }

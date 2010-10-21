@@ -11,6 +11,9 @@ class TestSound < Test::Unit::TestCase
     System::Sound.set_volume(0.25)
     assert_equal(0.25, cut(System::Sound.volume))
 
+    System::Sound.volume = 0.30
+    assert_equal(0.30, cut(System::Sound.volume))
+
     System::Sound.set_volume(1.0)
     assert_equal(1.0, cut(System::Sound.volume))
 
