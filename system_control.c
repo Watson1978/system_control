@@ -109,7 +109,7 @@ rb_sys_set_volume(VALUE obj, SEL sel, VALUE volume)
     float         involume;
 
     if (!FIXFLOAT_P(volume)) {
-	rb_raise(rb_eArgError, "wrong type of argument");
+	rb_raise(rb_eTypeError, "wrong type of argument");
     }
 
     involume = NUM2DBL(volume);
