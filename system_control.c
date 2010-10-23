@@ -1,5 +1,10 @@
 #include <ruby/macruby.h>
 #include <ruby.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 
 #import <CoreAudio/CoreAudio.h>
 #import <AudioToolbox/AudioServices.h>
@@ -151,6 +156,128 @@ rb_sys_set_volume(VALUE obj, SEL sel, VALUE volume)
     return Qnil;
 }
 
+int make_bin_data(char *str, int length, int *out)
+{
+    char c;
+    int  d = 0;
+    int  i;
+
+    for (i = 0; i < length; i++) {
+	d = d << 4;
+
+	c = str[i];
+	if ((c >= '0') && (c <= '9')) {
+	    d += c - '0';
+	}
+	else if ((c >= 'a') && (c <= 'f')) {
+	    d += c - 'a' + 10;
+	}
+	else if ((c >= 'A') && (c <= 'F')) {
+	    d += c - 'A' + 10;
+	}
+	else {
+	    return false;
+	}
+    }
+
+    *out = d;
+    return true;
+}
+
+/*
+ * call-seq: System::Network.wol(macaddress)
+ *
+ * Wake up a sleeping machine, using Wake-on-Lan.
+ *   macaddress = "xx:xx:xx:xx:xx:xx"
+ *
+ * This method is unsupported with MacRuby 0.7.
+ */
+void
+rb_sys_wake_on_lan(VALUE obj, SEL sel, VALUE arg)
+{
+    VALUE addr;
+    char  buffer[6 * (16 + 1)];
+    char  b_addr[6];
+    int   i;
+    int   ret;
+
+     switch (TYPE(arg)) {
+     case T_STRING:
+	 addr = rb_str_split(arg, ":"); // do not implement on MacRuby 0.7
+	 break;
+
+     default:
+	 rb_raise(rb_eTypeError, "wrong type of argument");
+     }
+
+     const int length = rb_ary_len(addr);
+     if (length != 6) {
+	 rb_raise(rb_eArgError, "invalid address");
+     }
+
+     for (i = 0; i < length; i++) {
+	 VALUE value  = RARRAY_AT(addr, i);
+	 char* string = StringValuePtr(value);
+	 int   len    = strlen(string);
+	 int   data   = 0;
+
+	 if (len > 2 || len <= 0) {
+	     rb_raise(rb_eArgError, "invalid address");
+	 }
+
+	 ret = make_bin_data(string, len, &data);
+	 if (ret == false) {
+	     rb_raise(rb_eArgError, "invalid address");
+	 }
+
+	 b_addr[i] = (char)(data & 0xff);
+     }
+
+     // make a send data
+     int offset;
+     memset(&buffer[0], 0xff, 6);
+     for (i = 0; i < 16; i++) {
+	 offset += 6;
+	 memcpy(&buffer[offset], (const void*)b_addr, 6);
+     }
+
+     int sock;
+     int broadcast = 1;
+     struct sockaddr_in dstaddr;
+     char *exc_msg;
+
+     sock = socket(AF_INET, SOCK_DGRAM, 0);
+     if (sock == -1) {
+	 rb_raise(rb_eRuntimeError, "Failed to open the UDP socket");
+     }
+
+     memset(&dstaddr, 0, sizeof(dstaddr));
+     dstaddr.sin_family = AF_INET;
+     dstaddr.sin_port   = htons(12345); // any
+     dstaddr.sin_addr.s_addr = inet_addr("255.255.255.255");
+
+     ret = setsockopt(sock, SOL_SOCKET, SO_BROADCAST,
+		      (char *)&broadcast, sizeof(broadcast));
+     if (ret == -1) {
+	 exc_msg = "setsockopt() error";
+	 goto ERROR;
+     }
+
+     ret = sendto(sock, buffer, sizeof(buffer) , 0,
+		  (struct sockaddr *)&dstaddr, sizeof(dstaddr));
+     if (ret == -1) {
+	 exc_msg = "sendto() error";
+	 goto ERROR;
+     }
+
+     close(sock);
+     return;
+
+  ERROR:
+     close(sock);
+     rb_raise(rb_eRuntimeError, exc_msg);
+}
+
 void Init_system_control(void)
 {
     VALUE mSystem = rb_define_module("System");
@@ -162,4 +289,7 @@ void Init_system_control(void)
     rb_objc_define_module_function(mSound, "volume",     rb_sys_volume, 0);
     rb_objc_define_module_function(mSound, "volume=",    rb_sys_set_volume, 1);
     rb_objc_define_module_function(mSound, "set_volume", rb_sys_set_volume, 1);
+
+    VALUE mNetwork =  rb_define_module_under(mSystem, "Network");
+    rb_objc_define_module_function(mNetwork, "wol", rb_sys_wake_on_lan, 1);
 }
