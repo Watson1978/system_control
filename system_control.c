@@ -97,13 +97,13 @@ rb_sys_volume(VALUE obj, SEL sel)
 }
 
 /*
- * call-seq: System::Sound.set_volume(volume) -> nil
+ * call-seq: System::Sound.set_volume(volume)
  *
  * Set a system volume.
  *   range of volume = 0.0 .. 1.0
  *
  */
-VALUE
+void
 rb_sys_set_volume(VALUE obj, SEL sel, VALUE volume)
 {
     AudioDeviceID device;
@@ -130,7 +130,7 @@ rb_sys_set_volume(VALUE obj, SEL sel, VALUE volume)
     if (err == noErr && canset == true) {
 	size = sizeof involume;
 	err = AudioDeviceSetProperty(device, NULL, 0, false, kAudioDevicePropertyVolumeScalar, size, &involume);
-	goto EXIT;
+	return;
     }
 
     // else, try seperate channes
@@ -151,15 +151,12 @@ rb_sys_set_volume(VALUE obj, SEL sel, VALUE volume)
     if (err != noErr) {
 	rb_raise(rb_eRuntimeError, "Failed to set volume of channel");
     }
-
-  EXIT:
-    return Qnil;
 }
 
 int conv_char2bin(char *str, int length, unsigned long *out)
 {
+    unsigned long d = 0;
     char c;
-    int  d = 0;
     int  i;
 
     for (i = 0; i < length; i++) {
@@ -244,7 +241,6 @@ rb_sys_wake_on_lan(VALUE obj, SEL sel, VALUE arg)
      int sock;
      int broadcast = 1;
      struct sockaddr_in dstaddr;
-     char *exc_msg;
 
      sock = socket(AF_INET, SOCK_DGRAM, 0);
      if (sock == -1) {
@@ -259,23 +255,18 @@ rb_sys_wake_on_lan(VALUE obj, SEL sel, VALUE arg)
      ret = setsockopt(sock, SOL_SOCKET, SO_BROADCAST,
 		      (char *)&broadcast, sizeof(broadcast));
      if (ret == -1) {
-	 exc_msg = "setsockopt() error";
-	 goto ERROR;
+	 close(sock);
+	 rb_raise(rb_eRuntimeError, "setsockopt() error");
      }
 
      ret = sendto(sock, buffer, sizeof(buffer) , 0,
 		  (struct sockaddr *)&dstaddr, sizeof(dstaddr));
      if (ret == -1) {
-	 exc_msg = "sendto() error";
-	 goto ERROR;
+	 close(sock);
+	 rb_raise(rb_eRuntimeError, "sendto() error");
      }
 
      close(sock);
-     return;
-
-  ERROR:
-     close(sock);
-     rb_raise(rb_eRuntimeError, exc_msg);
 }
 
 void Init_system_control(void)
