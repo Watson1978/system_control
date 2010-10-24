@@ -156,7 +156,7 @@ rb_sys_set_volume(VALUE obj, SEL sel, VALUE volume)
     return Qnil;
 }
 
-int make_bin_data(char *str, int length, int *out)
+int conv_char2bin(char *str, int length, unsigned long *out)
 {
     char c;
     int  d = 0;
@@ -185,7 +185,7 @@ int make_bin_data(char *str, int length, int *out)
 }
 
 /*
- * call-seq: System::Network.wol(macaddress)
+ * call-seq: System::Network.wake(macaddress)
  *
  * Wake up a sleeping machine, using Wake-on-Lan.
  *   macaddress = "xx:xx:xx:xx:xx:xx"
@@ -219,13 +219,13 @@ rb_sys_wake_on_lan(VALUE obj, SEL sel, VALUE arg)
 	 VALUE value  = RARRAY_AT(addr, i);
 	 char* string = StringValuePtr(value);
 	 int   len    = strlen(string);
-	 int   data   = 0;
+	 unsigned long data = 0;
 
-	 if (len > 2 || len <= 0) {
+	 if (len > 2) {
 	     rb_raise(rb_eArgError, "invalid address");
 	 }
 
-	 ret = make_bin_data(string, len, &data);
+	 ret = conv_char2bin(string, len, &data);
 	 if (ret == false) {
 	     rb_raise(rb_eArgError, "invalid address");
 	 }
@@ -291,5 +291,5 @@ void Init_system_control(void)
     rb_objc_define_module_function(mSound, "set_volume", rb_sys_set_volume, 1);
 
     VALUE mNetwork =  rb_define_module_under(mSystem, "Network");
-    rb_objc_define_module_function(mNetwork, "wol", rb_sys_wake_on_lan, 1);
+    rb_objc_define_module_function(mNetwork, "wake", rb_sys_wake_on_lan, 1);
 }
