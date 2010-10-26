@@ -190,12 +190,13 @@ conv_char2bin(char *str, int length, unsigned long *out)
  *
  * This method is unsupported with MacRuby 0.7.
  */
+static char  buffer[6 * (16 + 1)];
+static char  b_addr[6];
+
 static void
 rb_sys_wake_on_lan(VALUE obj, SEL sel, VALUE arg)
 {
     VALUE addr;
-    char  buffer[6 * (16 + 1)];
-    char  b_addr[6];
     int   i;
     int   ret;
 
