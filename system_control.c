@@ -13,7 +13,7 @@
 /*
  * call-seq: System::Power.sleep
  */
-void
+static void
 rb_sys_sleep(VALUE obj, SEL sel)
 {
     mach_port_t  port;
@@ -33,8 +33,8 @@ rb_sys_sleep(VALUE obj, SEL sel)
     }
 }
 
-static
-AudioDeviceID get_audio_device_id(void)
+static AudioDeviceID
+get_audio_device_id(void)
 {
     AudioDeviceID device;
     OSStatus      err;
@@ -52,7 +52,7 @@ AudioDeviceID get_audio_device_id(void)
 /*
  * call-seq: System::Sound.volume -> volume
  */
-VALUE
+static VALUE
 rb_sys_volume(VALUE obj, SEL sel)
 {
     AudioDeviceID device;
@@ -103,7 +103,7 @@ rb_sys_volume(VALUE obj, SEL sel)
  *   range of volume = 0.0 .. 1.0
  *
  */
-void
+static void
 rb_sys_set_volume(VALUE obj, SEL sel, VALUE volume)
 {
     AudioDeviceID device;
@@ -153,7 +153,8 @@ rb_sys_set_volume(VALUE obj, SEL sel, VALUE volume)
     }
 }
 
-int conv_char2bin(char *str, int length, unsigned long *out)
+static int
+conv_char2bin(char *str, int length, unsigned long *out)
 {
     unsigned long d = 0;
     char c;
@@ -189,7 +190,7 @@ int conv_char2bin(char *str, int length, unsigned long *out)
  *
  * This method is unsupported with MacRuby 0.7.
  */
-void
+static void
 rb_sys_wake_on_lan(VALUE obj, SEL sel, VALUE arg)
 {
     VALUE addr;
