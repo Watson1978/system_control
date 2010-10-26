@@ -47,7 +47,6 @@ class Wake
 
   def wake
     i = @table.selectedRowIndexes.firstIndex
-    @address[i][:mac_address]
     begin
       System::Network.wake(@address[i][:mac_address])
     rescue => err
