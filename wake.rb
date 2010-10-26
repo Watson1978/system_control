@@ -29,7 +29,6 @@ class Wake
                                           :data => @address) do |table|
               table.setUsesAlternatingRowBackgroundColors(true)
               table.setGridStyleMask(NSTableViewSolidHorizontalGridLineMask)
-
             end
           end
 
