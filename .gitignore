@@ -1,2 +1,4 @@
-/system_control.bundle
-/system_control.o
+*.bundle
+*.o
+*.gem
+ext/Makefile
