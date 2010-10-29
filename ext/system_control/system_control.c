@@ -200,77 +200,77 @@ rb_sys_wake_on_lan(VALUE obj, SEL sel, VALUE arg)
     char* b_addr;
 
 
-     switch (TYPE(arg)) {
-     case T_STRING:
-	 addr = rb_str_split(arg, ":"); // do not implement on MacRuby 0.7
-	 break;
+    switch (TYPE(arg)) {
+    case T_STRING:
+	addr = rb_str_split(arg, ":"); // do not implement on MacRuby 0.7
+	break;
 
-     default:
-	 rb_raise(rb_eTypeError, "wrong type of argument");
-     }
+    default:
+	rb_raise(rb_eTypeError, "wrong type of argument");
+    }
 
-     const int length = rb_ary_len(addr);
-     if (length != 6) {
-	 rb_raise(rb_eArgError, "invalid address");
-     }
+    const int length = rb_ary_len(addr);
+    if (length != 6) {
+	rb_raise(rb_eArgError, "invalid address");
+    }
 
-     buffer = (char*)xmalloc(6 * 17);
-     b_addr = (char*)xmalloc(6);
-     for (i = 0; i < length; i++) {
-	 VALUE value  = RARRAY_AT(addr, i);
-	 char* string = StringValuePtr(value);
-	 int   len    = strlen(string);
-	 unsigned long data = 0;
+    buffer = (char*)xmalloc(6 * 17);
+    b_addr = (char*)xmalloc(6);
+    for (i = 0; i < length; i++) {
+	VALUE value  = RARRAY_AT(addr, i);
+	char* string = StringValuePtr(value);
+	int   len    = strlen(string);
+	unsigned long data = 0;
 
-	 if (len > 2) {
-	     rb_raise(rb_eArgError, "invalid address");
-	 }
+	if (len > 2) {
+	    rb_raise(rb_eArgError, "invalid address");
+	}
 
-	 ret = conv_char2bin(string, len, &data);
-	 if (ret == false) {
-	     rb_raise(rb_eArgError, "invalid address");
-	 }
+	ret = conv_char2bin(string, len, &data);
+	if (ret == false) {
+	    rb_raise(rb_eArgError, "invalid address");
+	}
 
-	 b_addr[i] = (char)(data & 0xff);
-     }
+	b_addr[i] = (char)(data & 0xff);
+    }
 
-     // make a send data
-     int offset;
-     memset(&buffer[0], 0xff, 6);
-     for (i = 0; i < 16; i++) {
-	 offset += 6;
-	 memcpy(&buffer[offset], (const void*)b_addr, 6);
-     }
+    // make a send data
+    int offset;
+    memset(&buffer[0], 0xff, 6);
+    for (i = 0; i < 16; i++) {
+	offset += 6;
+	memcpy(&buffer[offset], (const void*)b_addr, 6);
+    }
 
-     int sock;
-     int broadcast = 1;
-     struct sockaddr_in dstaddr;
+    int sock;
+    int broadcast = 1;
+    struct sockaddr_in dstaddr;
 
-     sock = socket(AF_INET, SOCK_DGRAM, 0);
-     if (sock == -1) {
-	 rb_raise(rb_eRuntimeError, "Failed to open the UDP socket");
-     }
+    sock = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sock == -1) {
+	rb_raise(rb_eRuntimeError, "Failed to open the UDP socket");
+    }
 
-     memset(&dstaddr, 0, sizeof(dstaddr));
-     dstaddr.sin_family = AF_INET;
-     dstaddr.sin_port   = htons(12345); // any
-     dstaddr.sin_addr.s_addr = inet_addr("255.255.255.255");
+    memset(&dstaddr, 0, sizeof(dstaddr));
+    dstaddr.sin_family = AF_INET;
+    dstaddr.sin_port   = htons(12345); // any
+    dstaddr.sin_addr.s_addr = inet_addr("255.255.255.255");
 
-     ret = setsockopt(sock, SOL_SOCKET, SO_BROADCAST,
-		      (char *)&broadcast, sizeof(broadcast));
-     if (ret == -1) {
-	 close(sock);
-	 rb_raise(rb_eRuntimeError, "setsockopt() error");
-     }
+    ret = setsockopt(sock, SOL_SOCKET, SO_BROADCAST,
+		     (char *)&broadcast, sizeof(broadcast));
+    if (ret == -1) {
+	close(sock);
+	rb_raise(rb_eRuntimeError, "setsockopt() error");
+    }
 
-     ret = sendto(sock, buffer, sizeof(buffer) , 0,
-		  (struct sockaddr *)&dstaddr, sizeof(dstaddr));
-     if (ret == -1) {
-	 close(sock);
-	 rb_raise(rb_eRuntimeError, "sendto() error");
-     }
+    ret = sendto(sock, buffer, sizeof(buffer) , 0,
+		 (struct sockaddr *)&dstaddr, sizeof(dstaddr));
+    if (ret == -1) {
+	close(sock);
+	rb_raise(rb_eRuntimeError, "sendto() error");
+    }
 
-     close(sock);
+    close(sock);
 }
 
 void Init_system_control(void)
