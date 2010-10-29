@@ -190,15 +190,15 @@ conv_char2bin(char *str, int length, unsigned long *out)
  *
  * This method is unsupported with MacRuby 0.7.
  */
-static char  buffer[6 * (16 + 1)];
-static char  b_addr[6];
-
 static void
 rb_sys_wake_on_lan(VALUE obj, SEL sel, VALUE arg)
 {
     VALUE addr;
     int   i;
     int   ret;
+    char* buffer;
+    char* b_addr;
+
 
      switch (TYPE(arg)) {
      case T_STRING:
@@ -214,6 +214,8 @@ rb_sys_wake_on_lan(VALUE obj, SEL sel, VALUE arg)
 	 rb_raise(rb_eArgError, "invalid address");
      }
 
+     buffer = (char*)xmalloc(6 * 17);
+     b_addr = (char*)xmalloc(6);
      for (i = 0; i < length; i++) {
 	 VALUE value  = RARRAY_AT(addr, i);
 	 char* string = StringValuePtr(value);
