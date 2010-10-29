@@ -1,0 +1,9 @@
+--- 
+- :name: 192.168.1.1
+  :mac_address: 0:1b:8b:d1:66:b6
+- :name: 192.168.1.10
+  :mac_address: 0:16:cb:af:d1:a3
+- :name: 192.168.1.200
+  :mac_address: 0:d:93:7d:ff:70
+- :name: 192.168.1.202
+  :mac_address: 0:1d:4f:14:94:a3

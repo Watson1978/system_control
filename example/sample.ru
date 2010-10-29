@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 framework 'Foundation'
 require 'rack'
+require 'rubygems'
 require 'system_control'
 
 SERVER_NAME = ""
