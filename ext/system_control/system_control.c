@@ -18,7 +18,7 @@
  * You can make your Mac sleep.
  */
 
-static void
+static VALUE
 rb_sys_sleep(VALUE obj)
 {
     mach_port_t  port;
@@ -36,6 +36,8 @@ rb_sys_sleep(VALUE obj)
     if (IOPMSleepSystem(manage) != kIOReturnSuccess) {
 	rb_raise(rb_eRuntimeError, "Failed to sleep");
     }
+
+    return Qnil;
 }
 
 static AudioDeviceID
@@ -116,7 +118,7 @@ rb_sys_volume(VALUE obj)
  *   range of volume = 0.0 .. 1.0
  */
 
-static void
+static VALUE
 rb_sys_set_volume(VALUE obj, VALUE volume)
 {
     AudioDeviceID device;
@@ -143,7 +145,7 @@ rb_sys_set_volume(VALUE obj, VALUE volume)
     if (err == noErr && canset == true) {
 	size = sizeof involume;
 	err = AudioDeviceSetProperty(device, NULL, 0, false, kAudioDevicePropertyVolumeScalar, size, &involume);
-	return;
+	return Qnil;
     }
 
     // else, try seperate channes
@@ -164,6 +166,8 @@ rb_sys_set_volume(VALUE obj, VALUE volume)
     if (err != noErr) {
 	rb_raise(rb_eRuntimeError, "Failed to set volume of channel");
     }
+
+    return Qnil;
 }
 
 static int
@@ -206,7 +210,7 @@ conv_char2bin(char *str, int length, unsigned long *out)
  * This method is supported with MacRuby 0.7+.
  */
 
-static void
+static VALUE
 rb_sys_wake_on_lan(VALUE obj, VALUE arg)
 {
     VALUE addr;
@@ -287,6 +291,7 @@ rb_sys_wake_on_lan(VALUE obj, VALUE arg)
     }
 
     close(sock);
+    return Qnil;
 }
 
 /*
