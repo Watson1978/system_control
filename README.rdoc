@@ -1,0 +1,18 @@
+= What is system_control?
+
+This is library of System Control for MacRuby. You can control the sound volume of your Mac, be sleep, etc. 
+
+== Requirements
+
+* {MacRuby Nightly Latest}[http://www.macruby.org/files/nightlies/]
+
+== Installing
+
+ $ sudo macgem install system_control
+
+== Using
+
+ require 'rubygems'
+ require 'system_control'
+
+ System::Power.sleep
