@@ -1,5 +1,6 @@
 *.bundle
 *.o
 *.gem
+*.gemspec
 .yardoc
 ext/Makefile
