@@ -11,10 +11,15 @@
 #include <IOKit/pwr_mgt/IOPMLib.h>
 
 /*
+ * Document-method: sleep
+ *
  * call-seq: System::Power.sleep
+ *
+ * You can make your Mac sleep.
  */
+
 static void
-rb_sys_sleep(VALUE obj, SEL sel)
+rb_sys_sleep(VALUE obj)
 {
     mach_port_t  port;
     io_connect_t manage;
@@ -50,10 +55,16 @@ get_audio_device_id(void)
 }
 
 /*
+ * Document-method: volume
+ *
  * call-seq: System::Sound.volume -> volume
+ *
+ * You could get a current sound volume of system.
+ *   range of volume = 0.0 .. 1.0
  */
+
 static VALUE
-rb_sys_volume(VALUE obj, SEL sel)
+rb_sys_volume(VALUE obj)
 {
     AudioDeviceID device;
     OSStatus      err;
@@ -97,14 +108,16 @@ rb_sys_volume(VALUE obj, SEL sel)
 }
 
 /*
+ * Document-method: set_volume
+ *
  * call-seq: System::Sound.set_volume(volume)
  *
  * Set a system volume.
  *   range of volume = 0.0 .. 1.0
- *
  */
+
 static void
-rb_sys_set_volume(VALUE obj, SEL sel, VALUE volume)
+rb_sys_set_volume(VALUE obj, VALUE volume)
 {
     AudioDeviceID device;
     OSStatus      err;
@@ -183,15 +196,18 @@ conv_char2bin(char *str, int length, unsigned long *out)
 }
 
 /*
+ * Document-method: wake
+ *
  * call-seq: System::Network.wake(macaddress)
  *
  * Wake up a sleeping machine, using Wake-on-Lan.
  *   macaddress = "xx:xx:xx:xx:xx:xx"
  *
- * This method is unsupported with MacRuby 0.7.
+ * This method is supported with MacRuby 0.7+.
  */
+
 static void
-rb_sys_wake_on_lan(VALUE obj, SEL sel, VALUE arg)
+rb_sys_wake_on_lan(VALUE obj, VALUE arg)
 {
     VALUE addr;
     int   i;
@@ -235,7 +251,7 @@ rb_sys_wake_on_lan(VALUE obj, SEL sel, VALUE arg)
     }
 
     // make a send data
-    int offset;
+    int offset = 0;
     memset(&buffer[0], 0xff, 6);
     for (i = 0; i < 16; i++) {
 	offset += 6;
@@ -273,18 +289,23 @@ rb_sys_wake_on_lan(VALUE obj, SEL sel, VALUE arg)
     close(sock);
 }
 
+/*
+ * The <code>System</code> module contains module function for
+ * simple controlling a system.
+ */
+
 void Init_system_control(void)
 {
     VALUE mSystem = rb_define_module("System");
 
     VALUE mPower =  rb_define_module_under(mSystem, "Power");
-    rb_objc_define_module_function(mPower, "sleep", rb_sys_sleep, 0);
+    rb_define_module_function(mPower, "sleep", rb_sys_sleep, 0);
 
     VALUE mSound =  rb_define_module_under(mSystem, "Sound");
-    rb_objc_define_module_function(mSound, "volume",     rb_sys_volume, 0);
-    rb_objc_define_module_function(mSound, "volume=",    rb_sys_set_volume, 1);
-    rb_objc_define_module_function(mSound, "set_volume", rb_sys_set_volume, 1);
+    rb_define_module_function(mSound, "volume",     rb_sys_volume, 0);
+    rb_define_module_function(mSound, "volume=",    rb_sys_set_volume, 1);
+    rb_define_module_function(mSound, "set_volume", rb_sys_set_volume, 1);
 
     VALUE mNetwork =  rb_define_module_under(mSystem, "Network");
-    rb_objc_define_module_function(mNetwork, "wake", rb_sys_wake_on_lan, 1);
+    rb_define_module_function(mNetwork, "wake", rb_sys_wake_on_lan, 1);
 }
