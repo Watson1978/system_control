@@ -6,7 +6,7 @@ module System
 
     module_function
 
-    # call-seq: System::Pboard.paste
+    # call-seq: System::Pboard.paste -> string
     #
     # This method get string from paste board.
 
