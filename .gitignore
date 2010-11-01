@@ -3,4 +3,4 @@
 *.gem
 *.gemspec
 .yardoc
-ext/Makefile
+Makefile
