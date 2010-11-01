@@ -8,16 +8,17 @@ module System
 
     # call-seq: System::Pboard.paste -> string
     #
-    # This method get string from paste board.
+    # This method get string from tbe pasteboard.
 
     def paste
       pboard = NSPasteboard.generalPasteboard
-      pboard.stringForType(NSStringPboardType)
+      str   = pboard.stringForType(NSStringPboardType)
+      str ||= ""
     end
 
     # call-seq: System::Pboard.copy(string) -> true or false
     #
-    # This method set string to paste board.
+    # This method set string to the pasteboard.
 
     def copy(string)
       if (string.class != String)
@@ -27,6 +28,16 @@ module System
       pboard = NSPasteboard.generalPasteboard
       pboard.declareTypes([NSStringPboardType], owner:nil);
       pboard.setString(string, forType:NSStringPboardType)
+    end
+
+    # call-seq: System::Pboard.clear
+    #
+    # Clears the existing contents of the pasteboard.
+
+    def clear
+      pboard = NSPasteboard.generalPasteboard
+      pboard.clearContents
+      nil
     end
   end
 end
