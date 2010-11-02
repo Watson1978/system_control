@@ -114,6 +114,8 @@ rb_sys_volume(VALUE obj)
  *
  * call-seq: System::Sound.set_volume(volume)
  *
+ * call-seq: System::Sound.volume = volume
+ *
  * Set a system volume.
  *   range of volume = 0.0 .. 1.0
  */
