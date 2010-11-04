@@ -222,7 +222,6 @@ rb_sys_wake_on_lan(VALUE obj, VALUE arg)
     char* buffer;
     char* b_addr;
 
-
     switch (TYPE(arg)) {
     case T_STRING:
 	addr = rb_str_split(arg, ":"); // do not implement on MacRuby 0.7
