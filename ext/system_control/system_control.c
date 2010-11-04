@@ -207,7 +207,9 @@ conv_char2bin(char *str, int length, unsigned long *out)
  * call-seq: System::Network.wake(macaddress)
  *
  * Wake up a sleeping machine, using Wake-on-Lan.
- *   macaddress = "xx:xx:xx:xx:xx:xx"
+ *   macaddress = "xx:xx:xx:xx:xx:xx"            # String
+ *  or
+ *   macaddress = "xx:xx:xx:xx:xx:xx".split(":") # Array
  *
  * This method is supported with MacRuby 0.7+.
  */
@@ -226,6 +228,10 @@ rb_sys_wake_on_lan(VALUE obj, VALUE arg)
 	addr = rb_str_split(arg, ":"); // do not implement on MacRuby 0.7
 	break;
 
+    case T_ARRAY:
+	addr = arg;
+	break;
+	
     default:
 	rb_raise(rb_eTypeError, "wrong type of argument");
     }
@@ -239,6 +245,10 @@ rb_sys_wake_on_lan(VALUE obj, VALUE arg)
     b_addr = (char*)xmalloc(6);
     for (i = 0; i < length; i++) {
 	VALUE value  = RARRAY_AT(addr, i);
+	if (TYPE(value) != T_STRING) {
+	    rb_raise(rb_eTypeError, "wrong type of argument");
+	}
+
 	char* string = StringValuePtr(value);
 	int   len    = strlen(string);
 	unsigned long data = 0;

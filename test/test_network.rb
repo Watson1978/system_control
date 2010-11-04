@@ -11,6 +11,12 @@ class TestNetwork < Test::Unit::TestCase
     assert_raise(ArgumentError){ System::Network.wake "111:2:3:4:5:6" }
     assert_raise(ArgumentError){ System::Network.wake "1:cg:3:4:5:6" }
     assert_nothing_raised(ArgumentError){ System::Network.wake "1:2:3:4::6" }
+    assert_nothing_raised(ArgumentError){ System::Network.wake "1-2-3-4-5-6".split("-") }
+    assert_raise(TypeError) { 
+      ary = "1-2-3-4-5-6".split("-")
+      ary[3] = 3
+      System::Network.wake ary
+    }
   end
 
 end
