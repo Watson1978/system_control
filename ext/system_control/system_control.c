@@ -141,7 +141,7 @@ rb_sys_set_volume(VALUE obj, VALUE volume)
     // get device
     device = get_audio_device_id();
 
-    size = sizeof canset;
+    size = sizeof(canset);
     err = AudioDeviceGetPropertyInfo(device, 0, false, kAudioDevicePropertyVolumeScalar, &size, &canset);
     if (err == noErr && canset == true) {
 	size = sizeof involume;
