@@ -10,6 +10,7 @@
 #import <AudioToolbox/AudioServices.h>
 #include <IOKit/pwr_mgt/IOPMLib.h>
 
+/* == [System::Power] == */
 /*
  * Document-method: sleep
  *
@@ -17,7 +18,6 @@
  *
  * You can make your Mac sleep.
  */
-
 static VALUE
 rb_sys_sleep(VALUE obj)
 {
@@ -40,6 +40,7 @@ rb_sys_sleep(VALUE obj)
     return Qnil;
 }
 
+/* == [System::Sound] == */
 static AudioDeviceID
 get_audio_device_id(void)
 {
@@ -64,7 +65,6 @@ get_audio_device_id(void)
  * You could get a current sound volume of system.
  *   range of volume = 0.0 .. 1.0
  */
-
 static VALUE
 rb_sys_volume(VALUE obj)
 {
@@ -119,7 +119,6 @@ rb_sys_volume(VALUE obj)
  * Set a system volume.
  *   range of volume = 0.0 .. 1.0
  */
-
 static VALUE
 rb_sys_set_volume(VALUE obj, VALUE volume)
 {
@@ -172,6 +171,7 @@ rb_sys_set_volume(VALUE obj, VALUE volume)
     return Qnil;
 }
 
+/* == [System::Network] == */
 static int
 conv_char2bin(char *str, int length, unsigned long *out)
 {
@@ -211,7 +211,6 @@ conv_char2bin(char *str, int length, unsigned long *out)
  *
  * This method is supported with MacRuby 0.7+.
  */
-
 static VALUE
 rb_sys_wake_on_lan(VALUE obj, VALUE arg)
 {
@@ -300,7 +299,6 @@ rb_sys_wake_on_lan(VALUE obj, VALUE arg)
  * The <code>System</code> module contains module function for
  * simple controlling a system.
  */
-
 void Init_system_control(void)
 {
     VALUE mSystem = rb_define_module("System");
