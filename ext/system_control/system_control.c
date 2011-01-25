@@ -37,6 +37,7 @@ rb_sys_sleep(VALUE obj)
 	rb_raise(rb_eRuntimeError, "Failed to sleep");
     }
 
+    IOServiceClose(manage);
     return Qnil;
 }
 
