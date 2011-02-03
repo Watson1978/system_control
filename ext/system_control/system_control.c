@@ -1,4 +1,4 @@
-#include <ruby/macruby.h>\
+#include <ruby/macruby.h>
 #include <ruby.h>
 #include <stdio.h>
 #include <stdlib.h>
