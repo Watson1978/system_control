@@ -67,6 +67,25 @@ rb_sys_sleep_display(VALUE obj)
     return Qnil;
 }
 
+static VALUE
+rb_sys_no_sleep_open(VALUE obj)
+{
+    IOPMAssertionID id;
+    IOReturn ret = IOPMAssertionCreate(kIOPMAssertionTypeNoDisplaySleep,
+				       kIOPMAssertionLevelOn, &id);
+    if (ret != kIOReturnSuccess) {
+	rb_raise(rb_eRuntimeError, "no sleep failed");
+    }
+
+    return INT2FIX((int)id);
+}
+
+static VALUE
+rb_sys_no_sleep_close(VALUE obj, VALUE arg)
+{
+    IOPMAssertionRelease(FIX2INT(arg));
+}
+
 /* == [System::Sound] == */
 static AudioDeviceID
 get_audio_device_id(void)
