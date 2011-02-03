@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+
+# Usage:
+#  $ sudo macgem install control_tower
+#  $ control_tower -R sample.ru
+
 framework 'Foundation'
 require 'rack'
 require 'rubygems'
