@@ -1,4 +1,4 @@
-#include <ruby/macruby.h>
+#include <ruby/macruby.h>\
 #include <ruby.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,11 +15,12 @@
 
 /* == [System::Power] == */
 /*
- * Document-method: sleep
+ *  Document-method: sleep
  *
- * call-seq: System::Power.sleep
+ *  call-seq:
+ *     System::Power.sleep
  *
- * You can make your Mac sleep.
+ *  You can make your Mac sleep.
  */
 static VALUE
 rb_sys_sleep(VALUE obj)
@@ -45,11 +46,12 @@ rb_sys_sleep(VALUE obj)
 }
 
 /*
- * Document-method: sleep_display
+ *  Document-method: sleep_display
  *
- * call-seq: System::Power.sleep_display
+ *  call-seq:
+ *     System::Power.sleep_display
  *
- * You can make your Mac's display sleep.
+ *  You can make your Mac's display sleep.
  */
 static VALUE
 rb_sys_sleep_display(VALUE obj)
@@ -83,12 +85,13 @@ get_audio_device_id(void)
 }
 
 /*
- * Document-method: volume
+ *  Document-method: volume
  *
- * call-seq: System::Sound.volume -> volume
+ *  call-seq:
+ *     System::Sound.volume -> volume
  *
- * You could get a current sound volume of system.
- *   range of volume = 0.0 .. 1.0
+ *  You could get a current sound volume of system.
+ *     range of volume = 0.0 .. 1.0
  */
 static VALUE
 rb_sys_volume(VALUE obj)
@@ -135,14 +138,13 @@ rb_sys_volume(VALUE obj)
 }
 
 /*
- * Document-method: set_volume
+ *  Document-method: set_volume
  *
- * call-seq: System::Sound.set_volume(volume)
+ *  call-seq:
+ *     System::Sound.set_volume(volume)
  *
- * call-seq: System::Sound.volume = volume
- *
- * Set a system volume.
- *   range of volume = 0.0 .. 1.0
+ *  Set a sound volume of system.
+ *     range of volume = 0.0 .. 1.0
  */
 static VALUE
 rb_sys_set_volume(VALUE obj, VALUE volume)
@@ -196,6 +198,21 @@ rb_sys_set_volume(VALUE obj, VALUE volume)
     return Qnil;
 }
 
+/*
+ *  Document-method: volume=
+ *
+ *  call-seq:
+ *     System::Sound.volume = volume
+ *
+ *  Set a sound volume of system.
+ *     range of volume = 0.0 .. 1.0
+ */
+static VALUE
+rb_sys_set_volume_aset(VALUE obj, VALUE volume)
+{
+    return rb_sys_set_volume(obj, volume);
+}
+
 /* == [System::Network] == */
 static int
 conv_char2bin(char *str, int length, unsigned long *out)
@@ -227,16 +244,18 @@ conv_char2bin(char *str, int length, unsigned long *out)
 }
 
 /*
- * Document-method: wake
+ *  Document-method: wake
  *
- * call-seq: System::Network.wake(macaddress)
+ *  call-seq:
+ *     System::Network.wake(macaddress)
  *
- * Wake up a sleeping machine, using Wake-on-Lan.
- *   macaddress = "xx:xx:xx:xx:xx:xx"            # String
+ *  Wake up a sleeping machine, using Wake-on-Lan.
+ *  The argument as macaddress pass a value as following.
+ *     macaddress = "xx:xx:xx:xx:xx:xx"            # String
  *  or
- *   macaddress = "xx:xx:xx:xx:xx:xx".split(":") # Array
+ *     macaddress = "xx:xx:xx:xx:xx:xx".split(":") # Array
  *
- * This method is supported with MacRuby 0.7+.
+ *  This method is supported with MacRuby 0.7+.
  */
 static VALUE
 rb_sys_wake_on_lan(VALUE obj, VALUE arg)
@@ -255,7 +274,7 @@ rb_sys_wake_on_lan(VALUE obj, VALUE arg)
     case T_ARRAY:
 	addr = arg;
 	break;
-	
+
     default:
 	rb_raise(rb_eTypeError, "wrong type of argument");
     }
@@ -343,7 +362,7 @@ void Init_system_control(void)
 
     VALUE mSound =  rb_define_module_under(mSystem, "Sound");
     rb_define_module_function(mSound, "volume",     rb_sys_volume, 0);
-    rb_define_module_function(mSound, "volume=",    rb_sys_set_volume, 1);
+    rb_define_module_function(mSound, "volume=",    rb_sys_set_volume_aset, 1);
     rb_define_module_function(mSound, "set_volume", rb_sys_set_volume, 1);
 
     VALUE mNetwork =  rb_define_module_under(mSystem, "Network");
