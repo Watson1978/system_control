@@ -1,10 +1,13 @@
 #include <ruby/macruby.h>
 #include <ruby.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 
 #import <CoreAudio/CoreAudio.h>
 #import <AudioToolbox/AudioServices.h>
@@ -38,6 +41,27 @@ rb_sys_sleep(VALUE obj)
     }
 
     IOServiceClose(manage);
+    return Qnil;
+}
+
+/*
+ * Document-method: sleep_display
+ *
+ * call-seq: System::Power.sleep_display
+ *
+ * You can make your Mac's display sleep.
+ */
+static VALUE
+rb_sys_sleep_display(VALUE obj)
+{
+    io_registry_entry_t regist =
+	IORegistryEntryFromPath(kIOMasterPortDefault, "IOService:/IOResources/IODisplayWrangler");
+    if(!regist) {
+	return Qnil;
+    }
+
+    int err = IORegistryEntrySetCFProperty(regist, CFSTR("IORequestIdle"), kCFBooleanTrue);
+    IOObjectRelease(regist);
     return Qnil;
 }
 
@@ -225,7 +249,7 @@ rb_sys_wake_on_lan(VALUE obj, VALUE arg)
 
     switch (TYPE(arg)) {
     case T_STRING:
-	addr = rb_str_split(arg, ":"); // do not implement on MacRuby 0.7
+	addr = rb_str_split(arg, ":");
 	break;
 
     case T_ARRAY:
@@ -315,6 +339,7 @@ void Init_system_control(void)
 
     VALUE mPower =  rb_define_module_under(mSystem, "Power");
     rb_define_module_function(mPower, "sleep", rb_sys_sleep, 0);
+    rb_define_module_function(mPower, "sleep_display", rb_sys_sleep_display, 0);
 
     VALUE mSound =  rb_define_module_under(mSystem, "Sound");
     rb_define_module_function(mSound, "volume",     rb_sys_volume, 0);
