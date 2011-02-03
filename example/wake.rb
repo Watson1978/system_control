@@ -1,5 +1,10 @@
 #!/usr/local/bin/macruby
 # -*- coding: utf-8 -*-
+
+# Usage:
+#  $ sudo macgem install hotcocoa
+#  $ ./wake.rb
+
 require 'rubygems'
 require 'hotcocoa'
 require 'yaml'
