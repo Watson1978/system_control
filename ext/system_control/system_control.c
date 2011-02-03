@@ -1,4 +1,3 @@
-#include <ruby/macruby.h>
 #include <ruby.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -62,7 +61,7 @@ rb_sys_sleep_display(VALUE obj)
 	return Qnil;
     }
 
-    int err = IORegistryEntrySetCFProperty(regist, CFSTR("IORequestIdle"), kCFBooleanTrue);
+    IORegistryEntrySetCFProperty(regist, CFSTR("IORequestIdle"), kCFBooleanTrue);
     IOObjectRelease(regist);
     return Qnil;
 }
@@ -378,6 +377,8 @@ void Init_system_control(void)
     VALUE mPower =  rb_define_module_under(mSystem, "Power");
     rb_define_module_function(mPower, "sleep", rb_sys_sleep, 0);
     rb_define_module_function(mPower, "sleep_display", rb_sys_sleep_display, 0);
+    rb_define_module_function(mPower, "no_sleep_open", rb_sys_no_sleep_open, 0);
+    rb_define_module_function(mPower, "no_sleep_close", rb_sys_no_sleep_close, 1);
 
     VALUE mSound =  rb_define_module_under(mSystem, "Sound");
     rb_define_module_function(mSound, "volume",     rb_sys_volume, 0);
