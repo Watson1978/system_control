@@ -13,7 +13,7 @@ begin
     gem.add_development_dependency "jeweler"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
     gem.extensions << 'ext/system_control/extconf.rb'
-    gem.files = Rake::FileList.new('[A-Z]*', 'ext/system_control/*', 'lib/**/*.rb')
+    gem.files = Rake::FileList.new('[A-Z]*', 'ext/system_control/*', 'lib/**/*.rb', 'resources/*')
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError

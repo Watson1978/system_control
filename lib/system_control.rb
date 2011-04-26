@@ -1,4 +1,5 @@
 require 'system_control/system_control'
+require 'system_control/growl.rb'
 
 module System
   module Pboard

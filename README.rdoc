@@ -16,3 +16,6 @@ This is library of System Control for MacRuby. You can control the sound volume 
  require 'system_control'
 
  System::Power.sleep
+
+ # Growl Notification
+ g "Growl notification test"
