@@ -11,9 +11,9 @@ module System
     GROWL_KEY_CLICKED_CONTEXT = "ClickedContext"
 
     def regist(app, notifications, icon = nil)
-      @application_name = app
+      @application_name = app.to_s
       @application_icon = icon || NSApplication.sharedApplication.applicationIconImage
-      @notifications = notifications
+      @notifications = notifications.map!{|x| x.to_s}
       @default_notifications = notifications
       @center = NSDistributedNotificationCenter.defaultCenter
       send_registration!
@@ -23,9 +23,9 @@ module System
       dict = {
         :ApplicationName => @application_name,
         #:ApplicationPID => pid,
-        :NotificationName => notification,
-        :NotificationTitle => title,
-        :NotificationDescription => description,
+        :NotificationName => notification.to_s,
+        :NotificationTitle => title.to_s,
+        :NotificationDescription => description.to_s,
         :NotificationPriority => options[:priority] || 0,
         :NotificationIcon => @application_icon.TIFFRepresentation,
       }
