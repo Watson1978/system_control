@@ -50,11 +50,22 @@ end
 
 module Kernel
   unless(defined? g)
-    def g(title, message = nil)
-      if message.nil?
-        message = title
-        title = "MacRuby"
+    def g(*args)
+      size = args.size
+      raise ArgumentError, "wrong number of arguments" if size <= 0 || size > 3
+
+      case size
+      when 1
+        title, message = "MacRuby", args[0]
+      when 2, 3
+        title, message, opts = args[0 .. 2]
+        if message.kind_of?(Hash)
+          title, message, opts = "MacRuby", title, message
+        end
       end
+
+      opts = {} if opts.nil?
+      raise ArgumentError, "illigal arguments" unless opts.kind_of?(Hash)
 
       g = System::Growl.instance
       icon = g.instance_variable_get(:@application_icon)
@@ -66,7 +77,7 @@ module Kernel
 
       notification = 'notification'
       g.regist("MacRuby System Control", [notification], icon)
-      g.notify(notification, title, message)
+      g.notify(notification, title, message, opts)
     end
   end
 end
