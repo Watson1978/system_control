@@ -54,11 +54,16 @@ module Kernel
         message = title
         title = "MacRuby"
       end
-      icon_path = File.expand_path(File.join(__FILE__, '../../../resources/macruby.icns'))
-      icon = NSImage.alloc.initWithContentsOfFile(icon_path)
-      notification = 'notification'
 
       g = System::Growl.instance
+      icon = g.instance_variable_get(:@application_icon)
+
+      if icon.nil?
+        icon_path = File.expand_path(File.join(__FILE__, '../../../resources/macruby.icns'))
+        icon = NSImage.alloc.initWithContentsOfFile(icon_path)
+      end
+
+      notification = 'notification'
       g.regist("MacRuby System Control", [notification], icon)
       g.notify(notification, title, message)
     end
