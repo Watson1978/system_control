@@ -34,6 +34,7 @@ module System
       @center.postNotificationName(:GrowlNotification, object:nil, userInfo:dict, deliverImmediately:false)
     end
 
+    private
     def send_registration!
       dict = {
         :ApplicationName => @application_name,
