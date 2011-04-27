@@ -10,6 +10,14 @@ module System
     GROWL_NOTIFICATION_TIMED_OUT = "GrowlTimedOut!"
     GROWL_KEY_CLICKED_CONTEXT = "ClickedContext"
 
+    # Regists a application metadata for Growl notification.
+    #
+    # @param [String] app
+    #   The application name that should be used registration in Growl.
+    # @param [Array] notifications
+    #   The kind of notifications.
+    # @param [NSImage] icon
+    #   The application icon that should be used registration in Growl.
     def regist(app, notifications, icon = nil)
       @application_name = app.to_s
       @application_icon = icon || NSApplication.sharedApplication.applicationIconImage
@@ -19,6 +27,18 @@ module System
       send_registration!
     end
 
+    # Sends a Growl notification.
+    #
+    # @param [String] notification
+    #   The one of notifications that registed notifications with regist.
+    # @param [String] title
+    #   The title that should be used in the Growl notification.
+    # @param [String] description
+    #   The body of the Grow notification.
+    # @param [Hash] options
+    #   Specifies a few optional options.<br>
+    #   * :sticky - indicates if the Grow notification should "stick" to the screen. Defaults to +false+.<br>
+    #   * :priority - sets the priority level of the Growl notification. Defaults to 0.
     def notify(notification, title, description, options = {})
       dict = {
         :ApplicationName => @application_name,
@@ -51,11 +71,11 @@ end
 module Kernel
   unless(defined? g)
     #
-    # Send a Growl Notification.
+    # Sends a Growl Notification. This method needs three arguments(two arguments are optional).
     #
     # @param [String] title
     #   The title that should be used in the Growl notification. This is optional argument. Defaults to "MacRuby".
-    # @param [String] message
+    # @param [String] description
     #   The body of the Grow notification.
     # @param [Hash] options
     #   Specifies a few optional options.<br>
@@ -68,11 +88,11 @@ module Kernel
 
       case size
       when 1
-        title, message = "MacRuby", args[0]
+        title, description = "MacRuby", args[0]
       when 2, 3
-        title, message, opts = args[0 .. 2]
-        if message.kind_of?(Hash)
-          title, message, opts = "MacRuby", title, message
+        title, description, opts = args[0 .. 2]
+        if description.kind_of?(Hash)
+          title, description, opts = "MacRuby", title, description
         end
       end
 
@@ -89,7 +109,7 @@ module Kernel
 
       notification = 'notification'
       g.regist("MacRuby System Control", [notification], icon)
-      g.notify(notification, title, message, opts)
+      g.notify(notification, title, description, opts)
     end
   end
 end
