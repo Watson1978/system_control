@@ -4,47 +4,42 @@ module System
 
     module_function
 
-    # call-seq:
-    #   System::Pboard.paste -> string
-    #
     # This method gets a string from the pasteboard.
+    #
+    # @return [String]
+    #   The string that gets from the pasteboard.
     def paste
       pboard = NSPasteboard.generalPasteboard
       str   = pboard.stringForType(NSStringPboardType)
       str ||= ""
     end
 
-    # call-seq:
-    #    System::Pboard.read -> string
+    # This method gets a string from the pasteboard. This method is alias of System::Pboard.paste.
     #
-    # This method gets a string from the pasteboard.
-    # - Alias of System::Pboard.paste
+    # @return [String]
+    #   The string that gets from the pasteboard.
     def read
       self.paste
     end
 
-    # call-seq:
-    #   System::Pboard.copy(string)
-    #
     # This method sets a string to the pasteboard.
+    #
+    # @param [String] string
+    #   The string that sets to the pasteboard.
     def copy(string)
       pboard = NSPasteboard.generalPasteboard
       pboard.declareTypes([NSStringPboardType], owner:nil);
       pboard.setString(string.to_s, forType:NSStringPboardType)
     end
 
-    # call-seq:
-    #   System::Pboard.write(string)
+    # This method sets a string to the pasteboard. This method is alias of System::Pboard.copy
     #
-    # This method sets a string to the pasteboard.
-    # - Alias of System::Pboard.copy
+    # @param [String] string
+    #   The string that sets to the pasteboard.
     def write(string)
       self.copy(string)
     end
 
-    # call-seq:
-    #   System::Pboard.clear
-    #
     # Clears the existing contents of the pasteboard.
     def clear
       pboard = NSPasteboard.generalPasteboard
