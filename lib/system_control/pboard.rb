@@ -28,13 +28,9 @@ module System
     #
     # This method sets a string to the pasteboard.
     def copy(string)
-      if (string.class != String)
-        string = string.to_s
-      end
-
       pboard = NSPasteboard.generalPasteboard
       pboard.declareTypes([NSStringPboardType], owner:nil);
-      pboard.setString(string, forType:NSStringPboardType)
+      pboard.setString(string.to_s, forType:NSStringPboardType)
     end
 
     # call-seq:
