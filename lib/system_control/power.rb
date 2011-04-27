@@ -1,4 +1,4 @@
-require './system_control'
+require File.join(File.dirname(__FILE__), 'system_control')
 
 module System
   module Power
