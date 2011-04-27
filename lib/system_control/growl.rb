@@ -50,6 +50,18 @@ end
 
 module Kernel
   unless(defined? g)
+    #
+    # Send a Growl Notification.
+    #
+    # @param [String] title
+    #   The title that should be used in the Growl notification. This is optional argument. Defaults to "MacRuby".
+    # @param [String] message
+    #   The body of the Grow notification.
+    # @param [Hash] options
+    #   Specifies a few optional options.<br>
+    #   * :sticky - indicates if the Grow notification should "stick" to the screen. Defaults to +false+.<br>
+    #   * :priority - sets the priority level of the Growl notification. Defaults to 0.
+    #
     def g(*args)
       size = args.size
       raise ArgumentError, "wrong number of arguments" if size <= 0 || size > 3
