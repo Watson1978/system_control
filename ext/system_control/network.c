@@ -62,7 +62,7 @@ rb_sys_wake_on_lan(VALUE obj, VALUE macaddr)
     char* buffer;
     char* b_addr;
 
-    switch (TYPE(arg)) {
+    switch (TYPE(macaddr)) {
     case T_STRING:
 	addr = rb_str_split(macaddr, ":");
 	break;
