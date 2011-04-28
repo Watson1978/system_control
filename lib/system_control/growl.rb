@@ -17,7 +17,7 @@ module System
     # @param [Array] notifications
     #   The kind of notifications.
     # @param [NSImage] icon
-    #   The application icon that should be used registration in Growl.
+    #   The application icon that should be used registration/notification in Growl.
     def regist(app, notifications, icon = nil)
       @application_name = app.to_s
       @application_icon = icon || NSApplication.sharedApplication.applicationIconImage
@@ -70,6 +70,7 @@ end
 
 module Kernel
   unless(defined? g)
+
     #
     # Sends a Growl Notification. This method needs three arguments(two arguments are optional).
     #
@@ -82,6 +83,11 @@ module Kernel
     #   * :sticky - indicates if the Grow notification should "stick" to the screen. Defaults to +false+.<br>
     #   * :priority - sets the priority level of the Growl notification. Defaults to 0.
     #
+    # @example
+    #   g "Description"
+    #   g "Description", {:sticky => true}
+    #   g "Notification title", "Description"
+    #   g "Notification title", "Description", {:sticky => true}
     def g(*args)
       size = args.size
       raise ArgumentError, "wrong number of arguments" if size <= 0 || size > 3

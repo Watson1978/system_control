@@ -8,7 +8,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-/* == [System::Network] == */
+/* :nodoc: */
 static int
 conv_char2bin(char *str, int length, unsigned long *out)
 {
@@ -39,21 +39,22 @@ conv_char2bin(char *str, int length, unsigned long *out)
 }
 
 /*
- *  Document-method: wake
+ * Wake up a sleeping machine, using Wake-on-Lan.
  *
- *  call-seq:
- *     System::Network.wake(macaddress)
+ * @param [String, Array] macaddr
+ *   The argument as macaddress pass a value.
+ * @example
+ *   macaddress = "xx:xx:xx:xx:xx:xx"            # String
+ *   System::Network.wake(macaddress)
  *
- *  Wake up a sleeping machine, using Wake-on-Lan.
- *  The argument as macaddress pass a value as following.
- *     macaddress = "xx:xx:xx:xx:xx:xx"            # String
- *  or
- *     macaddress = "xx:xx:xx:xx:xx:xx".split(":") # Array
+ *   macaddress = "xx:xx:xx:xx:xx:xx".split(":") # Array
+ *   System::Network.wake(macaddress)
  *
- *  This method is supported with MacRuby 0.7+.
+ * @since
+ *   This method is supported with MacRuby 0.7+.
  */
 static VALUE
-rb_sys_wake_on_lan(VALUE obj, VALUE arg)
+rb_sys_wake_on_lan(VALUE obj, VALUE macaddr)
 {
     VALUE addr;
     int   i;
@@ -63,11 +64,11 @@ rb_sys_wake_on_lan(VALUE obj, VALUE arg)
 
     switch (TYPE(arg)) {
     case T_STRING:
-	addr = rb_str_split(arg, ":");
+	addr = rb_str_split(macaddr, ":");
 	break;
 
     case T_ARRAY:
-	addr = arg;
+	addr = macaddr;
 	break;
 
     default:

@@ -1,14 +1,11 @@
 #include "system_control.h"
 #include <IOKit/pwr_mgt/IOPMLib.h>
 
-/* == [System::Power] == */
 /*
- *  Document-method: sleep
+ * Sleeps the machine.
  *
- *  call-seq:
- *     System::Power.sleep
- *
- *  You can make your Mac sleep.
+ * @example
+ *   System::Power.sleep
  */
 static VALUE
 rb_sys_sleep(VALUE obj)
@@ -34,12 +31,10 @@ rb_sys_sleep(VALUE obj)
 }
 
 /*
- *  Document-method: sleep_display
+ * Sleeps the only display.
  *
- *  call-seq:
- *     System::Power.sleep_display
- *
- *  You can make your Mac's display sleep.
+ * @example
+ *   System::Power.sleep_display
  */
 static VALUE
 rb_sys_sleep_display(VALUE obj)
@@ -55,6 +50,12 @@ rb_sys_sleep_display(VALUE obj)
     return Qnil;
 }
 
+/*
+ * Prepares the non-sleep. This method is used by no_sleep.
+ *
+ * @see
+ *   System::Power.no_sleep
+ */
 static VALUE
 rb_sys_no_sleep_open(VALUE obj)
 {
@@ -68,6 +69,12 @@ rb_sys_no_sleep_open(VALUE obj)
     return INT2FIX((int)id);
 }
 
+/*
+ * Cleans up the non-sleep. This method is used by no_sleep.
+ *
+ * @see
+ *   System::Power.no_sleep
+ */
 static VALUE
 rb_sys_no_sleep_close(VALUE obj, VALUE arg)
 {

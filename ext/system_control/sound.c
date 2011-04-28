@@ -2,7 +2,7 @@
 #import <CoreAudio/CoreAudio.h>
 #import <AudioToolbox/AudioServices.h>
 
-/* == [System::Sound] == */
+/* :nodoc: */
 static AudioDeviceID
 get_audio_device_id(void)
 {
@@ -20,13 +20,13 @@ get_audio_device_id(void)
 }
 
 /*
- *  Document-method: volume
+ * Gets the value of system sound voulume.
  *
- *  call-seq:
- *     System::Sound.volume -> volume
- *
- *  You could get a current sound volume of system.
- *     range of volume = 0.0 .. 1.0
+ * @return
+ *   The value of system sound voulume.
+ *   range of volume is 0.0 .. 1.0.
+ * @example
+ *   System::Sound.volume
  */
 static VALUE
 rb_sys_volume(VALUE obj)
@@ -73,13 +73,13 @@ rb_sys_volume(VALUE obj)
 }
 
 /*
- *  Document-method: set_volume
+ * Sets the value of system sound volume.
  *
- *  call-seq:
- *     System::Sound.set_volume(volume)
- *
- *  Set a sound volume of system.
- *     range of volume = 0.0 .. 1.0
+ * @param [Float] volume
+ *   The value that set volume to system.
+ *   range of volume is 0.0 .. 1.0.
+ * @example
+ *   System::Sound.set_volume(0.75)
  */
 static VALUE
 rb_sys_set_volume(VALUE obj, VALUE volume)
@@ -134,13 +134,10 @@ rb_sys_set_volume(VALUE obj, VALUE volume)
 }
 
 /*
- *  Document-method: volume=
+ * Sets the value of system sound volume.
  *
- *  call-seq:
- *     System::Sound.volume = volume
- *
- *  Set a sound volume of system.
- *     range of volume = 0.0 .. 1.0
+ * @see
+ *   System::Sound.set_volume
  */
 static VALUE
 rb_sys_set_volume_aset(VALUE obj, VALUE volume)
@@ -152,6 +149,6 @@ void Init_Sound(void)
 {
     VALUE mSound =  rb_define_module_under(mSystem, "Sound");
     rb_define_module_function(mSound, "volume",     rb_sys_volume, 0);
-    rb_define_module_function(mSound, "volume=",    rb_sys_set_volume_aset, 1);
     rb_define_module_function(mSound, "set_volume", rb_sys_set_volume, 1);
+    rb_define_module_function(mSound, "volume=",    rb_sys_set_volume_aset, 1);
 }
