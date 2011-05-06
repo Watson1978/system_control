@@ -1,6 +1,13 @@
 = What is system_control?
 
-This is library of System Control for MacRuby. You can control the sound volume of your Mac, be sleep, etc. 
+This is library of System Control for MacRuby.
+
+== Features
+* Sleeps your system
+* Controls System volume
+* Sends Wake-on-Lan.
+* Growl Notification
+* Accesses to pasteboard.
 
 == Requirements
 
@@ -19,3 +26,5 @@ This is library of System Control for MacRuby. You can control the sound volume 
 
  # Growl Notification
  g "Growl notification test"
+
+See {here}[https://github.com/Watson1978/system_control/tree/master/example] more examples.
