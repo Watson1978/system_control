@@ -1,5 +1,6 @@
 #include "system_control.h"
 #include <IOKit/pwr_mgt/IOPMLib.h>
+#include <IOKit/ps/IOPowerSources.h>
 
 /*
  * Sleeps the machine.
@@ -79,6 +80,32 @@ static VALUE
 rb_sys_no_sleep_close(VALUE obj, VALUE arg)
 {
     IOPMAssertionRelease(FIX2INT(arg));
+    return Qnil;
+}
+
+/*
+ * Gets the battery informataions.
+ *
+ * @returns [Hash]
+ *   battery informataions
+ */
+static VALUE
+rb_sys_battery(VALUE obj)
+{
+    VALUE hash = rb_hash_new();
+    CFDictionaryRef battery = (CFDictionaryRef)IOPSCopyPowerSourcesInfo();
+    const long count = CFDictionaryGetCount(battery);
+    const void **keys = (const void **)malloc(sizeof(void *) * count);
+    const void **values = (const void **)malloc(sizeof(void *) * count);
+    long i;
+
+    CFDictionaryGetKeysAndValues(battery, keys, values);
+    for (i = 0; i < count; i++) {
+	rb_hash_aset(hash, (VALUE)keys[i], (VALUE)values[i]);
+    }
+    CFRelease((CFTypeRef)battery);
+
+    return hash;
 }
 
 void Init_Power(void)
@@ -88,4 +115,5 @@ void Init_Power(void)
     rb_define_module_function(mPower, "sleep_display", rb_sys_sleep_display, 0);
     rb_define_module_function(mPower, "no_sleep_open", rb_sys_no_sleep_open, 0);
     rb_define_module_function(mPower, "no_sleep_close", rb_sys_no_sleep_close, 1);
+    rb_define_module_function(mPower, "battery", rb_sys_battery, 0);
 }

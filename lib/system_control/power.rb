@@ -26,5 +26,30 @@ module System
         no_sleep_close(id)
       end
     end
+
+    # Gets the battery informataions.
+    #
+    # @returns [Hash]
+    #   battery informataions
+    #
+    def battery_info
+      battery = self.battery
+      key = battery.keys
+      return nil if key.count <= 0
+      battery[key.first]
+    end
+
+    # Is AC Power connected?
+    #
+    # @returns [Bool]
+    #   true  : if AC Power connected
+    #   false : other
+    #
+    def is_AC?
+      battery = self.battery_info
+      return false if battery.nil?
+      return false if battery["Power Source State"] != "AC Power"
+      return true
+    end
   end
 end
