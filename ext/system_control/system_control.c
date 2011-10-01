@@ -13,4 +13,5 @@ void Init_system_control(void)
     Init_Power();
     Init_Sound();
     Init_Network();
+    Init_OS();
 }
