@@ -5,6 +5,7 @@ This is library of System Control for MacRuby.
 == Features
 * Sleeps your system
 * Controls System volume
+* Controls Screen brightness
 * Sends Wake-on-Lan.
 * Growl Notification
 * Accesses to pasteboard.
@@ -22,9 +23,8 @@ This is library of System Control for MacRuby.
  require 'rubygems'
  require 'system_control'
 
+ System::Sound.volume = 0.8
+ System::Screen.brightness = 0.5
  System::Power.sleep
-
- # Growl Notification
- g "Growl notification test"
 
 See {here}[https://github.com/Watson1978/system_control/tree/master/example] more examples.
