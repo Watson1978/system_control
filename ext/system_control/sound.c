@@ -133,22 +133,10 @@ rb_sys_set_volume(VALUE obj, VALUE volume)
     return Qnil;
 }
 
-/*
- * Sets the value of system sound volume.
- *
- * @see
- *   System::Sound.set_volume
- */
-static VALUE
-rb_sys_set_volume_aset(VALUE obj, VALUE volume)
-{
-    return rb_sys_set_volume(obj, volume);
-}
-
 void Init_Sound(void)
 {
     VALUE mSound =  rb_define_module_under(mSystem, "Sound");
     rb_define_module_function(mSound, "volume",     rb_sys_volume, 0);
     rb_define_module_function(mSound, "set_volume", rb_sys_set_volume, 1);
-    rb_define_module_function(mSound, "volume=",    rb_sys_set_volume_aset, 1);
+    rb_define_module_function(mSound, "volume=",    rb_sys_set_volume, 1);
 }
