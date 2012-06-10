@@ -7,6 +7,7 @@
 
 extern VALUE mSystem;
 
+void Init_Screen(void);
 void Init_Power(void);
 void Init_Sound(void);
 void Init_Network(void);

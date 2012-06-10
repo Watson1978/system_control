@@ -10,6 +10,7 @@ void Init_system_control(void)
 {
     mSystem = rb_define_module("System");
 
+    Init_Screen();
     Init_Power();
     Init_Sound();
     Init_Network();
